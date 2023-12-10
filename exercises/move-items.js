@@ -12,6 +12,9 @@
  */
 
 // Your code goes here...
+// Select all elements with the class of "item" as a NodeList
+const allItems = document.querySelectorAll('.item');
+
 
 
 
@@ -23,6 +26,8 @@
  * */
 
 // Your code goes here
+// Select the main container by the ID of "main"
+const main = document.getElementById('main');
 
 
 
@@ -34,6 +39,8 @@
  */
 
 // Your code goes here
+// Select the favorites container by the ID of "favs"
+const favs = document.getElementById('favs');
 
 
 
@@ -47,6 +54,22 @@
  */
 
 // Your code goes here
+// Create the updateCollections function
+function updateCollections(id, direction) {
+    const item = document.getElementById(id);
+    const newParent = direction === 'toFavs' ? favs : main;
+    newParent.appendChild(item);
+
+    // Update icon based on the direction
+    const icon = item.querySelector('i');
+    if (icon) {
+        if (direction === 'toFavs') {
+            icon.classList.replace('fa-heart-circle-plus', 'fa-heart-crack');
+        } else {
+            icon.classList.replace('fa-heart-crack', 'fa-heart-circle-plus');
+        }
+    }
+}
 
 
 
@@ -66,4 +89,13 @@
 
 // Your code goes here...
 
+// Iterate through each item in allItems NodeList and add event listeners
+allItems.forEach(item => {
+    item.addEventListener('click', () => {
+        const currentParentId = item.parentNode.id;
+        const itemId = item.id;
+        const direction = currentParentId === 'main' ? 'toFavs' : 'toMain';
+        updateCollections(itemId, direction);
+    });
+});
 

@@ -38,3 +38,66 @@
  */
 
 // Your code goes here...
+// This code assumes there are elements with the IDs 'main-collection' and 'favorites-collection'
+// which represent the two sections.
+
+// Wait for the DOM to load
+
+// Function to get the list of favorite IDs from local storage
+function getFavoritesFromLocalStorage() {
+    const favorites = localStorage.getItem('favorites');
+    return favorites ? JSON.parse(favorites) : [];
+}
+
+// Function to save the list of favorite IDs to local storage
+function saveFavoritesToLocalStorage(favorites) {
+    localStorage.setItem('favorites', JSON.stringify(favorites));
+}
+
+// Function to add an ID to the list of favorites in local storage
+function addToFavorites(id) {
+    const favorites = getFavoritesFromLocalStorage();
+    favorites.push(id);
+    saveFavoritesToLocalStorage(favorites);
+}
+
+// Function to remove an ID from the list of favorites in local storage
+function removeFromFavorites(id) {
+    let favorites = getFavoritesFromLocalStorage();
+    favorites = favorites.filter(favId => favId !== id);
+    saveFavoritesToLocalStorage(favorites);
+}
+
+// Function to update the card's background color based on its favorite status
+function updateCardColor(card, isFavorite) {
+    card.style.backgroundColor = isFavorite ? 'red' : 'white';
+}
+
+// Event handler for when a card is clicked
+function handleCardClick(event) {
+    const card = event.target;
+    const id = card.id;
+    const isFavorite = getFavoritesFromLocalStorage().includes(id);
+    
+    if (isFavorite) {
+        removeFromFavorites(id);
+        updateCardColor(card, false);
+    } else {
+        addToFavorites(id);
+        updateCardColor(card, true);
+    }
+}
+
+// Add event listener to each card
+document.querySelectorAll('.card').forEach(card => {
+    card.addEventListener('click', handleCardClick);
+});
+
+// Set the initial colors of the cards on page load
+document.addEventListener('DOMContentLoaded', () => {
+    const favorites = getFavoritesFromLocalStorage();
+    document.querySelectorAll('.card').forEach(card => {
+        const isFavorite = favorites.includes(card.id);
+        updateCardColor(card, isFavorite);
+    });
+});
