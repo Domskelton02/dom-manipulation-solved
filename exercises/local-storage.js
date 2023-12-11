@@ -75,26 +75,28 @@ function updateCardColor(card, isFavorite) {
 
 // Event handler for when a card is clicked
 function handleCardClick(event) {
-    const card = event.target;
-    const id = card.id;
-    const isFavorite = getFavoritesFromLocalStorage().includes(id);
-    
-    if (isFavorite) {
-        removeFromFavorites(id);
-        updateCardColor(card, false);
-    } else {
-        addToFavorites(id);
-        updateCardColor(card, true);
+    // Use event delegation to check if the clicked element is a card
+    if (event.target.classList.contains('card')) {
+        const card = event.target;
+        const id = card.id;
+        const isFavorite = getFavoritesFromLocalStorage().includes(id);
+
+        if (isFavorite) {
+            removeFromFavorites(id);
+            updateCardColor(card, false);
+        } else {
+            addToFavorites(id);
+            updateCardColor(card, true);
+        }
     }
 }
 
-// Add event listener to each card
-document.querySelectorAll('.card').forEach(card => {
-    card.addEventListener('click', handleCardClick);
-});
-
-// Set the initial colors of the cards on page load
+// Attach event listener to the cardsContainer for delegation
 document.addEventListener('DOMContentLoaded', () => {
+    const cardsContainer = document.querySelector('.cardsContainer');
+    cardsContainer.addEventListener('click', handleCardClick);
+
+    // Set the initial colors of the cards on page load
     const favorites = getFavoritesFromLocalStorage();
     document.querySelectorAll('.card').forEach(card => {
         const isFavorite = favorites.includes(card.id);
